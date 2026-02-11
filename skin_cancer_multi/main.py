@@ -47,53 +47,57 @@ class SkinCancerPredictor:
         print("✅ Model loaded successfully")
         print(f"Model output shape: {self.model.output_shape}")
     
-    def preprocess_image(self, image_path):
+    def preprocess_image(self, image_input):
         """
         Preprocess an image for prediction.
         
         Args:
-            image_path (str): Path to the image file
+            image_input (str or PIL.Image): Path to the image file or PIL Image object
             
         Returns:
             numpy.ndarray: Preprocessed image array
         """
-        img = tf.keras.preprocessing.image.load_img(
-            image_path,
-            target_size=self.input_size
-        )
+        if hasattr(image_input, 'read') or not isinstance(image_input, str):
+            # It's a PIL image
+            img = image_input.resize(self.input_size)
+        else:
+            # It's a path
+            img = tf.keras.preprocessing.image.load_img(
+                image_input,
+                target_size=self.input_size
+            )
+            
         img = tf.keras.preprocessing.image.img_to_array(img)
         img = np.expand_dims(img, axis=0)  # Add batch dimension
         return img
     
-    def predict(self, image_path, verbose=True):
+    def predict(self, image_input, verbose=True):
         """
         Predict the skin cancer type from an image.
         
         Args:
-            image_path (str): Path to the image file
+            image_input (str or PIL.Image): Path or PIL Image
             verbose (bool): Whether to print prediction details
             
         Returns:
-            dict: Dictionary containing prediction results with keys:
-                - class_name: predicted class name
-                - class_index: predicted class index
-                - confidence: confidence percentage
-                - all_probabilities: all class probabilities
+            dict: Dictionary containing prediction results
         """
         # Preprocess the image
-        img = self.preprocess_image(image_path)
+        img = self.preprocess_image(image_input)
         
         if verbose:
             print(f"Input shape: {img.shape}")
-            print(f"Input min/max: {img.min()}, {img.max()}")
+            # print(f"Input min/max: {img.min()}, {img.max()}") # Optimize: Removed heavy logging
         
-        # Make prediction
-        predictions = self.model.predict(img, verbose=0)
+        # Optimization: Use model() call instead of predict()
+        predictions_tensor = self.model(img, training=False)
+        predictions = predictions_tensor.numpy()[0]
+        
         class_index = np.argmax(predictions)
         confidence = float(np.max(predictions)) * 100
         
         if verbose:
-            print(f"Predictions: {predictions}")
+            # print(f"Predictions: {predictions}") # Optimize: Removed specific array printing
             print(f"Predicted class: {self.class_names[class_index]}")
             print(f"Confidence: {confidence:.2f}%")
         

@@ -11,21 +11,31 @@ class SkinCancerDetector:
         self.model = tf.keras.models.load_model(model_path)
         print("Binary model loaded successfully.")
 
-    def preprocess_image(self, img_path):
+    def preprocess_image(self, img_input):
         """
         Load and preprocess image for prediction.
+        Accepts either a file path or a PIL Image object.
         """
-        img = image.load_img(img_path, target_size=(224, 224))
+        if hasattr(img_input, 'read') or not isinstance(img_input, str):
+            # It's a PIL image or file object
+            img = img_input.resize((224, 224))
+        else:
+            # It's a path
+            img = image.load_img(img_input, target_size=(224, 224))
+            
         img_array = image.img_to_array(img) / 255.0
         img_array = np.expand_dims(img_array, axis=0)
         return img_array
 
-    def predict(self, img_path):
+    def predict(self, img_input):
         """
         Predict whether the image contains cancer or not.
         """
-        img_array = self.preprocess_image(img_path)
-        prediction = self.model.predict(img_array)[0][0]
+        img_array = self.preprocess_image(img_input)
+        
+        # Optimization: call model directly instead of .predict() for faster single-image inference
+        prediction_tensor = self.model(img_array, training=False)
+        prediction = float(prediction_tensor.numpy()[0][0])
 
         if prediction > 0.5:
             result = f"Cancer ({prediction*100:.2f}% confidence)"

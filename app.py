@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 import os
 from datetime import datetime
+from PIL import Image
 from skin_cancer_binary.main import SkinCancerDetector
 from skin_cancer_multi.main import SkinCancerPredictor
 
@@ -22,12 +23,16 @@ def index():
         file = request.files.get("image")
 
         if file:
+            # Optimize: Load image to memory once for processing
+            img = Image.open(file).convert('RGB')
+            
+            # Save file for UI display
             file_path = os.path.join(UPLOAD_FOLDER, file.filename)
-            file.save(file_path)
+            img.save(file_path)
 
-            # Stage 1: Binary detection (Cancer vs Non-Cancer)
+            # Stage 1: Binary detection (Pass the in-memory image object)
             print("\n=== Stage 1: Binary Detection ===")
-            binary_result = binary_detector.predict(file_path)
+            binary_result = binary_detector.predict(img)
             print(f"Binary Result: {binary_result}")
             
             # Parse binary result
@@ -38,14 +43,13 @@ def index():
             timestamp = datetime.now().strftime("%B %d, %Y at %I:%M %p")
             
             # Prepare image path for template (relative to static folder)
-            # UPLOAD_FOLDER is "static/uploads", so we want "uploads/filename"
-            # os.path.join might use backslashes on Windows, so we normalize for URL
             relative_image_path = f"uploads/{file.filename}"
             
             # Stage 2: If cancer detected, run multi-class classification
             if is_cancer:
                 print("\n=== Stage 2: Multi-Class Classification ===")
-                multiclass_result = multiclass_predictor.predict(file_path, verbose=True)
+                # Pass in-memory image to avoid reloading from disk
+                multiclass_result = multiclass_predictor.predict(img, verbose=True)
                 
                 return render_template(
                     "result.html",
