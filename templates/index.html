@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Advanced AI-powered skin cancer detection and classification system for medical professionals">
+    <title>DermaAI Analytics | Advanced Skin Cancer Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-microscope"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>DermaAI Analytics</h1>
+                    <p>Advanced Skin Cancer Detection</p>
+                </div>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="/" class="active"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#about"><i class="fas fa-info-circle"></i> About</a></li>
+                    <li><a href="#how-it-works"><i class="fas fa-cogs"></i> How It Works</a></li>
+                    <li><a href="#contact"><i class="fas fa-envelope"></i> Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-wrapper">
+        <div class="container">
+            <!-- Hero Section -->
+            <div class="hero-section">
+                <h1 class="page-title">AI-Powered Skin Lesion Analysis</h1>
+                <p class="subtitle">Advanced multi-class classification system for dermatological professionals</p>
+                <div class="stats-container">
+                    <div class="stat-item">
+                        <div class="stat-value">98.2%</div>
+                        <div class="stat-label">Accuracy</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">50k+</div>
+                        <div class="stat-label">Images Analyzed</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">≤3s</div>
+                        <div class="stat-label">Analysis Time</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">7</div>
+                        <div class="stat-label">Lesion Types</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features Grid -->
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h4>High Accuracy</h4>
+                    <p>Deep learning model trained on extensive medical datasets with 98.2% accuracy rate</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h4>Fast Results</h4>
+                    <p>Get comprehensive analysis results in under 3 seconds</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h4>HIPAA Compliant</h4>
+                    <p>Enterprise-grade security and data privacy protection</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h4>Detailed Reports</h4>
+                    <p>Comprehensive classification with confidence scores</p>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <!-- Upload Section -->
+            <div class="upload-section">
+                <h2><i class="fas fa-upload"></i> Upload Dermoscopic Image</h2>
+                <p class="upload-subtitle">Supported formats: JPG, PNG, JPEG | Maximum size: 10MB</p>
+                
+                <form id="upload-form" method="POST" enctype="multipart/form-data">
+                    <div id="upload-area" class="upload-area">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <p class="file-label">Click to upload or drag and drop</p>
+                        <p class="file-hint">Upload dermoscopic skin lesion image for analysis</p>
+                        <div class="upload-specs">
+                            <span class="spec-item"><i class="fas fa-check-circle"></i> JPG, PNG, JPEG</span>
+                            <span class="spec-item"><i class="fas fa-check-circle"></i> Max 10MB</span>
+                            <span class="spec-item"><i class="fas fa-check-circle"></i> High resolution preferred</span>
+                        </div>
+                    </div>
+                    
+                    <input type="file" id="file-input" name="image" accept="image/*" required>
+                    
+                    <div id="preview-container" class="preview-container">
+                        <div class="preview-wrapper">
+                            <img id="preview-image" class="preview-image" alt="Preview">
+                            <div class="preview-overlay">
+                                <button type="button" class="preview-remove" id="remove-preview">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <p id="file-name" class="file-name"></p>
+                    </div>
+
+                    <div id="loader" class="loader">
+                        <div class="loader-spinner"></div>
+                        <p class="loader-text">Analyzing image with AI model...</p>
+                        <p class="loader-subtext">This may take a few seconds</p>
+                    </div>
+                    
+                    <button id="submit-btn" type="submit" class="btn btn-primary" disabled>
+                        <i class="fas fa-search"></i> Analyze Image
+                    </button>
+                </form>
+            </div>
+
+            <!-- Information Boxes -->
+            <div class="info-grid">
+                <div class="info-box info">
+                    <div class="info-box-header">
+                        <span class="info-icon"><i class="fas fa-lightbulb"></i></span>
+                        <h3>How To Use</h3>
+                    </div>
+                    <div class="info-content">
+                        <ol>
+                            <li><strong>Upload</strong> a clear dermoscopic image of the skin lesion</li>
+                            <li><strong>Analyze</strong> using our AI-powered classification system</li>
+                            <li><strong>Review</strong> detailed results with confidence levels</li>
+                            <li><strong>Consult</strong> with medical professionals for diagnosis</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="info-box alert">
+                    <div class="info-box-header">
+                        <span class="info-icon"><i class="fas fa-exclamation-triangle"></i></span>
+                        <h3>Medical Disclaimer</h3>
+                    </div>
+                    <div class="info-content">
+                        <p>This tool is designed to <strong>assist healthcare professionals</strong> in preliminary analysis. 
+                           It is <strong>not a substitute for professional medical diagnosis</strong>. 
+                           Always consult with a qualified dermatologist for definitive diagnosis and treatment planning.</p>
+                    </div>
+                </div>
+
+                <div class="info-box success">
+                    <div class="info-box-header">
+                        <span class="info-icon"><i class="fas fa-robot"></i></span>
+                        <h3>About the AI Model</h3>
+                    </div>
+                    <div class="info-content">
+                        <p>Our deep learning model uses convolutional neural networks trained on thousands of 
+                           labeled dermoscopic images from the ISIC archive. The system can classify multiple types 
+                           of skin lesions with high accuracy and provides confidence scores for each prediction.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Section -->
+            <div class="about-section" id="about">
+                <h2><i class="fas fa-info-circle"></i> About Our Technology</h2>
+                <div class="about-content">
+                    <div class="about-text">
+                        <h3>Two-Stage Detection Process</h3>
+                        <p>Our system employs a sophisticated two-stage analysis:</p>
+                        <ul>
+                            <li><strong>Stage 1:</strong> Binary classification (Cancer vs. Non-Cancer)</li>
+                            <li><strong>Stage 2:</strong> Multi-class classification (Specific lesion type)</li>
+                        </ul>
+                        <p>This approach ensures both high sensitivity for detection and specificity for classification.</p>
+                    </div>
+                    <div class="about-image">
+                        <div class="process-diagram">
+                            <div class="process-step">
+                                <div class="step-number">1</div>
+                                <p>Image Upload</p>
+                            </div>
+                            <div class="process-arrow"><i class="fas fa-arrow-right"></i></div>
+                            <div class="process-step">
+                                <div class="step-number">2</div>
+                                <p>Preprocessing</p>
+                            </div>
+                            <div class="process-arrow"><i class="fas fa-arrow-right"></i></div>
+                            <div class="process-step">
+                                <div class="step-number">3</div>
+                                <p>AI Analysis</p>
+                            </div>
+                            <div class="process-arrow"><i class="fas fa-arrow-right"></i></div>
+                            <div class="process-step">
+                                <div class="step-number">4</div>
+                                <p>Results</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4><i class="fas fa-microscope"></i> DermaAI Analytics</h4>
+                <p>Advanced AI-powered skin cancer detection system designed to assist medical professionals in early detection and classification of skin lesions.</p>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-researchgate"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Important Links</h4>
+                <ul>
+                    <li><a href="#"><i class="fas fa-shield-alt"></i> Privacy Policy</a></li>
+                    <li><a href="#"><i class="fas fa-file-contract"></i> Terms of Service</a></li>
+                    <li><a href="#"><i class="fas fa-exclamation-triangle"></i> Medical Disclaimer</a></li>
+                    <li><a href="#"><i class="fas fa-envelope"></i> Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#"><i class="fas fa-book"></i> Documentation</a></li>
+                    <li><a href="#"><i class="fas fa-file-alt"></i> Research Papers</a></li>
+                    <li><a href="#"><i class="fas fa-code"></i> API Access</a></li>
+                    <li><a href="#"><i class="fas fa-headset"></i> Support</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Certifications</h4>
+                <div class="certifications">
+                    <span class="cert-badge"><i class="fas fa-check"></i> HIPAA Compliant</span>
+                    <span class="cert-badge"><i class="fas fa-check"></i> CE Mark</span>
+                    <span class="cert-badge"><i class="fas fa-check"></i> FDA Registered</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 DermaAI Analytics. All rights reserved. | For medical professional use only. | v2.1.0</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

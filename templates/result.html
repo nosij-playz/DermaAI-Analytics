@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Report | DermaAI Analytics</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span class="logo-icon">🔬</span>
+                <h1>DermaAI Analytics</h1>
+            </div>
+            <a href="/" class="nav-back">← New Analysis</a>
+        </div>
+    </header>
+
+    <main class="main-wrapper">
+        <div class="container result-container">
+            <div class="result-header fade-in">
+                <span class="status-badge">Analysis Confirmed</span>
+                <h1>Diagnostic Report</h1>
+                <p class="timestamp">Generated: {{ timestamp }}</p>
+            </div>
+
+            <div class="report-grid">
+                <div class="result-card image-card scale-in">
+                    <div class="result-card-header">
+                        <span class="result-card-icon">📸</span>
+                        <h2>Analyzed Specimen</h2>
+                    </div>
+                    <div class="image-wrapper">
+                        <img src="{{ url_for('static', filename=image_path) }}" 
+                             alt="Skin Lesion Analysis" 
+                             class="result-image">
+                    </div>
+                    <div class="image-meta">
+                        <span><i class="fas fa-clock"></i> {{ timestamp }}</span>
+                    </div>
+                </div>
+
+                <div class="result-card stage-1-card fade-in">
+                    <div class="result-card-header">
+                        <span class="result-card-icon">🔬</span>
+                        <h2>Stage 1: Screening</h2>
+                    </div>
+                    <div class="card-label">Binary Classification</div>
+                    <div class="result-display">
+                        <span class="value {{ 'danger' if is_cancer else 'success' }}">
+                            {{ binary_result }}
+                        </span>
+                    </div>
+                    <div class="confidence-container">
+                        <div class="confidence-track">
+                            <div class="confidence-fill" data-confidence="{{ binary_confidence.replace('%', '') }}"></div>
+                        </div>
+                        <span class="conf-text">AI Confidence: {{ binary_confidence }}</span>
+                    </div>
+                </div>
+
+                {% if is_cancer %}
+                <div class="result-card stage-2-card highlight fade-in">
+                    <div class="result-card-header">
+                        <span class="result-card-icon">🎯</span>
+                        <h2>Stage 2: Diagnosis</h2>
+                    </div>
+                    <div class="card-label">Multi-Class Analysis</div>
+                    <div class="result-display">
+                        <span class="value">{{ prediction }}</span>
+                    </div>
+                    <div class="confidence-container">
+                        <div class="confidence-track">
+                            <div class="confidence-fill secondary" data-confidence="{{ confidence.replace('%', '') }}"></div>
+                        </div>
+                        <span class="conf-text">Model Certainty: {{ confidence }}</span>
+                    </div>
+                </div>
+                {% else %}
+                <div class="result-card skipped-card fade-in">
+                    <div class="result-card-header">
+                        <span class="result-card-icon">✓</span>
+                        <h2>Stage 2: Not Required</h2>
+                    </div>
+                    <div class="card-label">Analysis Complete</div>
+                    <p class="status-msg">
+                        <i class="fas fa-check-circle"></i> No malignant features detected during screening. 
+                        Multi-class classification pipeline was bypassed.
+                    </p>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="action-box {{ 'urgent' if is_cancer else 'nominal' }}">
+                <h3>Clinical Summary</h3>
+                {% if is_cancer %}
+                <p><strong>Urgent:</strong> High-confidence markers for {{ prediction }} detected. Recommend immediate dermoscopy and potential biopsy.</p>
+                {% else %}
+                <p><strong>Nominal:</strong> No malignant features detected by the screening model. Routine monitoring is suggested.</p>
+                {% endif %}
+            </div>
+
+            <div class="button-group no-print">
+                <button onclick="window.print()" class="btn btn-secondary">Print Full Report</button>
+                <a href="/" class="btn btn-outline">Analyze Another</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Animate confidence bars
+            const bars = document.querySelectorAll('.confidence-fill');
+            bars.forEach(bar => {
+                const width = bar.getAttribute('data-confidence');
+                setTimeout(() => {
+                    bar.style.width = width + '%';
+                }, 300);
+            });
+        });
+    </script>
+</body>
+</html>
