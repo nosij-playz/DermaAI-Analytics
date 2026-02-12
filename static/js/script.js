@@ -114,9 +114,9 @@ function initializeFileUpload() {
 
     function validateFile(file) {
         // Validate file type
-        const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+        const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/avif'];
         if (!validTypes.includes(file.type)) {
-            showNotification('Please select a valid image file (JPG, PNG, JPEG)', 'error');
+            showNotification('Please select a valid image file (JPG, PNG, JPEG, AVIF)', 'error');
             resetFileUpload();
             return false;
         }
